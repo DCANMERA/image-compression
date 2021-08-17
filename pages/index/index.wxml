@@ -1,0 +1,85 @@
+<view class="user-info">
+  <block wx:if="{{ canIUseOpenData }}">
+    <view
+      class="userinfo-avatar"
+      bindtap="bindViewTap"
+    >
+      <open-data type="userAvatarUrl"></open-data>
+    </view>
+    <open-data type="userNickName"></open-data>
+  </block>
+  <block wx:elif="{{ !hasUserInfo }}">
+    <button
+      wx:if="{{ canIUseGetUserProfile }}"
+      bindtap="getUserProfile"
+    >
+      获取头像昵称
+    </button>
+    <button
+      wx:elif="{{ canIUse }}"
+      open-type="getUserInfo"
+      bindgetuserinfo="getUserInfo"
+    >
+      获取头像昵称
+    </button>
+    <view wx:else> 请使用1.4.4及以上版本基础库 </view>
+  </block>
+  <block wx:else>
+    <image
+      class="userinfo-avatar"
+      src="{{ userInfo.avatarUrl }}"
+      mode="cover"
+    ></image>
+    <text class="userinfo-nickname">{{ userInfo.nickName }}</text>
+  </block>
+</view>
+
+<view class="usermotto">
+  <view
+    class="user-motto"
+    bindtap="handleUploadImg"
+  >
+    {{ motto }}
+  </view>
+</view>
+
+<view
+  class="message"
+  wx:if="{{ !images.length }}"
+>
+  体验下图片压缩功能
+</view>
+
+<view
+  class="container"
+  wx:else
+>
+  <view
+    class="upload-item"
+    wx:for="{{ images }}"
+    wx:key="index"
+  >
+    <image
+      class="userinfo-avatar upload-img"
+      src="{{ item.path }}"
+      mode="aspectFit"
+    ></image>
+    <view class="upload-desc">
+      <view class="compression">
+        压缩前：<text class="compression-before">{{ item.size[0] }}</text> kb
+      </view>
+      <view class="compression">
+        压缩后：<text class="compression-after">{{ item.size[1] }}</text> kb
+      </view>
+      <view class="compression compression-bpp">
+        压缩比：<text class="compression-after">{{ item.bpp }}</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<canvas
+  class="canvas"
+  canvas-id="canvas"
+  style="visibility: hidden; position: absolute; z-index: -99; left: -10000rpx; top: -10000rpx; width: 2000px; height: 2000px;"
+/>
